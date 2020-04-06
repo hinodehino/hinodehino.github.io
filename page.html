@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>пчолка</title>
+	<style type="text/css">
+		body{
+			margin: 0;
+			padding: 0;
+		}
+		#w{
+			width: 100vw;
+			height: 100vh;
+		}
+		#bee{
+			width: 12vh;
+			position: absolute;
+			transform-origin: center;
+			top: 50%;
+			left: 50%;
+		}
+		#bee-sprite{
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="w">
+		<div id="bee">
+			<img id="bee-sprite" src="bee.png">
+		</div>
+	</div>
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+<script type="text/javascript">
+	var bee = $("#bee");
+	var beeSprite = $("#bee-sprite")
+	var mouse = {};
+	$(document).on( "mousemove", function(event) {
+		mouse.x = event.pageX; 
+		mouse.y = event.pageY;
+	});
+	var follow = setInterval(function()
+	{
+		var beePos = bee.position()
+		var diff = {
+			x: beePos.left - mouse.x,
+			y: beePos.top - mouse.y
+		}
+		var newX = beePos.left - diff.x / 50;
+		var newY = beePos.top - diff.y / 50;
+		var angle = Math.atan2(mouse.x - beePos.left, -(mouse.y - beePos.top)) * (180 / Math.PI)
+		bee.css({left: newX, top: newY})
+		if (mouse.x < beePos.left){
+			beeSprite.css({transform: `scaleX(-1) rotate(${-angle}deg)`})
+		}
+		else {
+			beeSprite.css({transform: `scaleX(1) rotate(${angle}deg)`})
+		}
+	}, 10);
+</script>
+</html>
