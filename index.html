@@ -3,29 +3,60 @@
 <head>
 	<meta charset="UTF-8">
 	<title>пчолка</title>
+	<link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/minecraftia" type="text/css"/>
 	<style type="text/css">
 		body{
 			margin: 0;
 			padding: 0;
+			font-family: 'MinecraftiaRegular';
+			font-size: 2.6vh;
+		}
+		*{
+			overflow: hidden;
 		}
 		#w{
 			width: 100vw;
 			height: 100vh;
 		}
 		#bee{
-			width: 12vh;
+			width: 15vh;
 			position: absolute;
-			transform-origin: center;
 			top: 50%;
 			left: 50%;
 		}
 		#bee-sprite{
 			width: 100%;
 		}
+		#settings{
+			display: flex;
+			flex-direction: column;
+			padding: 25px 50px;
+		}
+		#settings div{
+			display: flex;
+			align-items: center;
+		}
+		#settings div div{
+			margin-right: 15px;
+		}
+		input{
+			outline: none;
+			border: 0;
+			font-family: 'MinecraftiaRegular';
+			font-size: 2.5vh;
+			padding-left: 1px;
+			width: 10vh;
+		}
 	</style>
 </head>
 <body>
 	<div id="w">
+		<div id="settings">
+			<div>
+				<div>Smoothing: </div>
+				<input type="number" value="50" onchange="changeSmooth(this.value)">
+			</div>
+		</div>
 		<div id="bee">
 			<img id="bee-sprite" src="bee.png">
 		</div>
@@ -38,23 +69,29 @@
 <script type="text/javascript">
 	var bee = $("#bee");
 	var beeSprite = $("#bee-sprite")
+	var smoothLevel = 50;
 	var mouse = {};
 	$(document).on( "mousemove", function(event) {
 		mouse.x = event.pageX; 
 		mouse.y = event.pageY;
 	});
+	var changeSmooth = function(n){
+		smoothLevel = n
+	}
 	var follow = setInterval(function()
 	{
 		var beePos = bee.position()
+		var beeWidth = bee.width()
+		var beeHeight = bee.height()
 		var diff = {
 			x: beePos.left - mouse.x,
 			y: beePos.top - mouse.y
 		}
-		var newX = beePos.left - diff.x / 50;
-		var newY = beePos.top - diff.y / 50;
-		var angle = Math.atan2(mouse.x - beePos.left, -(mouse.y - beePos.top)) * (180 / Math.PI)
+		var newX = beePos.left - diff.x / smoothLevel;
+		var newY = beePos.top - diff.y / smoothLevel;
+		var angle = Math.atan2(mouse.x - (beePos.left + beeWidth / 2), -(mouse.y - (beePos.top + beeHeight / 2))) * (180 / Math.PI)
 		bee.css({left: newX, top: newY})
-		if (mouse.x < beePos.left){
+		if (mouse.x - beeWidth / 2 < beePos.left){
 			beeSprite.css({transform: `scaleX(-1) rotate(${-angle}deg)`})
 		}
 		else {
