@@ -2,101 +2,102 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>пчолка</title>
-	<link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/minecraftia" type="text/css"/>
-	<style type="text/css">
-		body{
-			margin: 0;
-			padding: 0;
-			font-family: 'MinecraftiaRegular';
-			font-size: 2.6vh;
-		}
-		*{
-			overflow: hidden;
-		}
-		#w{
+	<title>Document</title><link rel="stylesheet" type="text/css" href="fontstyles.css">
+    <style type="text/css">
+		html{
+    		overflow: hidden;
+    	}
+    	body{
 			width: 100vw;
 			height: 100vh;
+			margin: 0;
+			padding: 0;
+			font-family: 'TT Commons';
+			color: #222;
 		}
-		#bee{
-			width: 15vh;
-			position: absolute;
-			top: 50%;
-			left: 50%;
+		.dark{
+			background: #1a1b1c;
+			color: #ebeff2;
 		}
-		#bee-sprite{
+		#content{
+			font-size: 36px;
+			font-weight: 500;
 			width: 100%;
-		}
-		#settings{
+			height: 100%;
 			display: flex;
-			flex-direction: column;
-			padding: 25px 50px;
-		}
-		#settings div{
-			display: flex;
+			justify-content: center;
 			align-items: center;
+			flex-direction: column;
 		}
-		#settings div div{
-			margin-right: 15px;
+		.button{
+			user-select: none;
+			width: 100px;
+			margin-top: 1%;
+			border-radius: 5px;
+			font-size: 18px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: white;
+			transition: all .2s ease;
+			padding: 3px;
+			background: transparent;
+			border: 2px solid #0d7eff;
+			color: #0d7eff;
 		}
-		input{
-			outline: none;
-			border: 0;
-			font-family: 'MinecraftiaRegular';
-			font-size: 2.5vh;
-			padding-left: 1px;
-			width: 10vh;
+		.idle{
+			cursor: pointer;
+			border: 2px solid #4bd14d;
+			background: #4bd14d;
+			color: black;
+			mix-blend-mode: screen;
+		}
+		.idle:hover{
+			background: transparent;
+			color: #4bd14d;
 		}
 	</style>
 </head>
 <body>
-	<div id="w">
-		<div id="settings">
-			<div>
-				<div>Smoothing: </div>
-				<input type="number" value="50" onchange="changeSmooth(this.value)">
-			</div>
-		</div>
-		<div id="bee">
-			<img id="bee-sprite" src="bee.png">
-		</div>
+	<div id="content" class="dark">
+		<div id="metric">0 taps</div>
+		<div class="button idle" id="control" onclick="track()">start</div>
 	</div>
 </body>
-<script
-  src="https://code.jquery.com/jquery-3.4.1.min.js"
-  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-  crossorigin="anonymous"></script>
 <script type="text/javascript">
-	var bee = $("#bee");
-	var beeSprite = $("#bee-sprite")
-	var smoothLevel = 50;
-	var mouse = {};
-	$(document).on( "mousemove", function(event) {
-		mouse.x = event.pageX; 
-		mouse.y = event.pageY;
-	});
-	var changeSmooth = function(n){
-		smoothLevel = n
+	var metric = document.getElementById("metric")
+	var control = document.getElementById("control")
+	var taps = 0
+	var mode = 0
+
+	var tap = function(e){
+		taps += 1
+		metric.innerText = taps + ' taps'
 	}
-	var follow = setInterval(function()
-	{
-		var beePos = bee.position()
-		var beeWidth = bee.width()
-		var beeHeight = bee.height()
-		var diff = {
-			x: beePos.left - mouse.x,
-			y: beePos.top - mouse.y
+
+	var track = function(){
+		if (!mode){
+			mode = 1
+			control.innerText = '5s'
+			control.classList.remove('idle')
+			metric.innerText = '0 taps'
+			timeLeft = 4
+			var lefting = setInterval(function(){
+				control.innerText = timeLeft + 's'
+				timeLeft -= 1
+			}, 1000)
+			var tapTracking = document.addEventListener('keydown', tap)
+			setTimeout(function(){
+				document.removeEventListener('keydown', tap)
+				metric.innerText = taps / 5 + ' tps'
+				taps = 0
+				clearInterval(lefting)
+				control.classList.add('idle')
+				control.innerText = 'start'
+				mode = 0
+			}, 5000)
 		}
-		var newX = beePos.left - diff.x / smoothLevel;
-		var newY = beePos.top - diff.y / smoothLevel;
-		var angle = Math.atan2(mouse.x - (beePos.left + beeWidth / 2), -(mouse.y - (beePos.top + beeHeight / 2))) * (180 / Math.PI)
-		bee.css({left: newX, top: newY})
-		if (mouse.x - beeWidth / 2 < beePos.left){
-			beeSprite.css({transform: `scaleX(-1) rotate(${-angle}deg)`})
-		}
-		else {
-			beeSprite.css({transform: `scaleX(1) rotate(${angle}deg)`})
-		}
-	}, 10);
+	}
+
 </script>
 </html>
