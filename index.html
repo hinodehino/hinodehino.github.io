@@ -30,8 +30,9 @@
 			flex-direction: column;
 		}
 		.button{
+			cursor: pointer;
+			outline: none;
 			user-select: none;
-			width: 100px;
 			margin-top: 1%;
 			border-radius: 5px;
 			font-size: 18px;
@@ -45,8 +46,18 @@
 			border: 2px solid #0d7eff;
 			color: #0d7eff;
 		}
+		.button:hover{
+			background: #0d7eff;
+			color: black;
+			mix-blend-mode: screen;
+		}
+		.wide{
+			width: 100px;
+		}
+		.small{
+			width: 45px;
+		}
 		.idle{
-			cursor: pointer;
 			border: 2px solid #4bd14d;
 			background: #4bd14d;
 			color: black;
@@ -56,12 +67,70 @@
 			background: transparent;
 			color: #4bd14d;
 		}
+		.passive{
+			border: 2px solid #4c5359;
+			color: #4c5359;
+		}
+		.passive:hover{
+			background: transparent;
+			color: #4c5359;
+			border: 2px solid #4c5359;
+		}
+		.nonetransition{
+			transition: none;
+		}
+		.unhover:hover{
+			background: transparent;
+			color: #0d7eff;
+		}
+		.active{
+			background: #0d7eff;
+			color: black;
+		}
+		.active:hover{
+			background: #0d7eff;
+			color: black;
+		}
+		#binds{
+			margin-top: 10px;
+			width: 110px;
+			display: flex;
+		}
+		#binds div{
+			width: 50%;
+			height: 50px;
+		}
+		#info{
+			text-align: center;
+			margin-top: 20px;
+			font-size: 20px;
+			width: 50%;
+			color: #4c5359;
+		}
+		@keyframes click{
+			from{
+				background: #0d7eff;
+				color: black;
+			}
+		}
 	</style>
 </head>
 <body>
-	<div id="content" class="dark">
-		<div id="metric">0 taps</div>
-		<div class="button idle" id="control" onclick="track()">start</div>
+	<div id="content">
+		<div id="metric">0 tps</div>
+		<div class="wide button idle" id="control" onclick="track()">start</div>
+		<div id="binds">
+			<div id='1' class="button unhover nonetransition" style="margin-right: 10px;" onclick="rebind(1)">
+				Z
+			</div>
+			<div id='2' class="button unhover nonetransition" onclick="rebind(2)">
+				X
+			</div>
+		</div>
+		<div id="info">
+			Click on bind buttons and press your, to rebind it.
+		</div>
+		<div class="wide button passive" onclick="hide(this)">hide</div>
 	</div>
 </body>
 <script type="text/javascript">
@@ -69,10 +138,59 @@
 	var control = document.getElementById("control")
 	var taps = 0
 	var mode = 0
+	var num = 0
+	var btns = {
+		1: document.getElementById('1'),
+		2: document.getElementById('2')
+	}
+	var binds = {
+		1: 'KeyZ',
+		2: 'KeyX'
+	}
+
+	var hide = function(e){
+		e.style.display = 'none';
+		document.getElementById("info").style.display = 'none';
+	}
+
+	var change = function(e){
+		binds[num] = e.code
+		btns[num].classList.remove('active')
+		if (e.key.length <= 3){
+			btns[num].innerText = e.key.toUpperCase()
+		} else{
+			btns[num].innerText = e.key.substring(0, 3).toUpperCase()
+		}
+		document.removeEventListener('keydown', change)
+		num = 0
+	}
+
+	var rebind = function(n){
+		if (!num){
+			btns[n].classList.add('active')
+			num = n
+			document.addEventListener('keydown', change)
+		}
+	}
 
 	var tap = function(e){
-		taps += 1
-		metric.innerText = taps + ' taps'
+		if (e.code == binds[1]){
+			taps += 1
+			metric.innerText = taps
+			btns[1].classList.add('active')
+		} else if (e.code == binds[2]){
+			taps += 1
+			metric.innerText = taps
+			btns[2].classList.add('active')
+		}
+	}
+
+	var leave = function(e){
+		if (e.code == binds[1]){
+			btns[1].classList.remove('active')
+		} else if (e.code == binds[2]){
+			btns[2].classList.remove('active')
+		}
 	}
 
 	var track = function(){
@@ -80,24 +198,24 @@
 			mode = 1
 			control.innerText = '5s'
 			control.classList.remove('idle')
-			metric.innerText = '0 taps'
+			metric.innerText = '0'
 			timeLeft = 4
 			var lefting = setInterval(function(){
 				control.innerText = timeLeft + 's'
 				timeLeft -= 1
 			}, 1000)
-			var tapTracking = document.addEventListener('keydown', tap)
+			document.addEventListener('keydown', tap)
+			document.addEventListener('keyup', leave)
 			setTimeout(function(){
 				document.removeEventListener('keydown', tap)
 				metric.innerText = taps / 5 + ' tps'
 				taps = 0
 				clearInterval(lefting)
 				control.classList.add('idle')
-				control.innerText = 'start'
+				control.innerText = 'retry'
 				mode = 0
 			}, 5000)
 		}
 	}
-
 </script>
 </html>
