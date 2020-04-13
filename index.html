@@ -30,6 +30,9 @@
 			align-items: center;
 			flex-direction: column;
 		}
+		#sub-metric{
+			font-size: 18px;
+		}
 		.button{
 			cursor: pointer;
 			outline: none;
@@ -145,6 +148,7 @@
 	</div>
 	<div id="content">
 		<div id="metric">0 tps</div>
+		<div id="sub-metric">0 ms</div>
 		<div class="wide button idle" id="control" onclick="track()">start</div>
 		<div id="binds">
 			<div id='1' class="button unhover nonetransition" style="margin-right: 10px;" onclick="rebind(1)">
@@ -162,19 +166,22 @@
 </body>
 <script type="text/javascript">
 	var metric = document.getElementById("metric")
+	var submetric = document.getElementById("sub-metric")
 	var control = document.getElementById("control")
-	var taps = 0
-	var mode = 0
-	var num = 0
+	var delay = 0;
+	var delays = [];
+	var taps = 0;
+	var mode = 0;
+	var num = 0;
 	var countdown, finish;
 	var btns = {
 		1: document.getElementById('1'),
 		2: document.getElementById('2')
-	}
+	};
 	var binds = {
 		1: 'KeyZ',
 		2: 'KeyX'
-	}
+	};
 	var darkMode = 0;
 
 	var theme = function(e){
@@ -219,10 +226,18 @@
 			taps += 1
 			metric.innerText = taps
 			btns[1].classList.add('active')
+			diff = new Date().getTime() - delay
+			delays.push(diff)
+			submetric.innerText = diff + ' ms'
+			delay = new Date().getTime()
 		} else if (e.code == binds[2]){
 			taps += 1
 			metric.innerText = taps
 			btns[2].classList.add('active')
+			diff = new Date().getTime() - delay
+			delays.push(diff)
+			submetric.innerText = diff + ' ms'
+			delay = new Date().getTime()
 		}
 	}
 
@@ -241,6 +256,11 @@
 		taps = 0
 		control.classList.add('idle')
 		control.innerText = 'retry'
+		var sum = 0;
+		for(var i = 0; i < delays.length; i++){
+			sum += delays[i]
+		}
+		submetric.innerText = (sum / delays.length).toFixed(0) + ' ms'
 		mode = 0
 	}
 
@@ -251,6 +271,7 @@
 			control.classList.remove('idle')
 			metric.innerText = '0'
 			timeLeft = 4
+			delay = new Date().getTime()
 			countdown = setInterval(function(){
 				control.innerText = timeLeft + 's'
 				timeLeft -= 1
