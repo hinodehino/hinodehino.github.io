@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title><link rel="stylesheet" type="text/css" href="fontstyles.css">
+	<title>TPS test</title><link rel="stylesheet" type="text/css" href="fontstyles.css">
+	<link rel="shortcut icon" href="favicon.png" type="image/png">
     <style type="text/css">
 		html{
     		overflow: hidden;
@@ -17,7 +18,7 @@
 		}
 		.dark{
 			background: #1a1b1c;
-			color: #ebeff2;
+			color: white;
 		}
 		#content{
 			font-size: 36px;
@@ -107,15 +108,41 @@
 			width: 50%;
 			color: #4c5359;
 		}
-		@keyframes click{
-			from{
-				background: #0d7eff;
-				color: black;
-			}
+		#top-menu{
+			position: absolute;
+			padding: 15px;
+			display: flex;
+			align-items: center;
+		}
+		#credit{
+			text-decoration: none;
+			color: #0d7eff;
+			margin-left: 20px;
+			font-weight: 500;
+		}
+		#theme-change{
+			user-select: none;
+			cursor: pointer;
+			transition: all .2s ease;
+		}
+		#theme-change:active{
+			transform: scale(0.8);
+		}
+		#theme-icon{
+			width: 30px;
+		}
+		.inverse{
+			filter: invert(100%);
 		}
 	</style>
 </head>
 <body>
+	<div id="top-menu">
+		<div id="theme-change" onclick="theme(this)">
+			<img id="theme-icon" src="https://img.icons8.com/material-rounded/100/000000/sun.png"/>
+		</div>
+		<a target="_blank" href="https://vk.com/metriss" id="credit">@metriss</a>
+	</div>
 	<div id="content">
 		<div id="metric">0 tps</div>
 		<div class="wide button idle" id="control" onclick="track()">start</div>
@@ -139,6 +166,7 @@
 	var taps = 0
 	var mode = 0
 	var num = 0
+	var countdown, finish;
 	var btns = {
 		1: document.getElementById('1'),
 		2: document.getElementById('2')
@@ -146,6 +174,19 @@
 	var binds = {
 		1: 'KeyZ',
 		2: 'KeyX'
+	}
+	var darkMode = 0;
+
+	var theme = function(e){
+		if (!darkMode){
+			document.body.classList.add('dark')
+			e.classList.add('inverse')
+			darkMode = 1
+		} else {
+			document.body.classList.remove('dark')
+			e.classList.remove('inverse')
+			darkMode = 0
+		}
 	}
 
 	var hide = function(e){
@@ -193,6 +234,16 @@
 		}
 	}
 
+	var dropTracking = function(){
+		clearInterval(countdown)
+		document.removeEventListener('keydown', tap)
+		metric.innerText = taps / 5 + ' tps'
+		taps = 0
+		control.classList.add('idle')
+		control.innerText = 'retry'
+		mode = 0
+	}
+
 	var track = function(){
 		if (!mode){
 			mode = 1
@@ -200,21 +251,16 @@
 			control.classList.remove('idle')
 			metric.innerText = '0'
 			timeLeft = 4
-			var lefting = setInterval(function(){
+			countdown = setInterval(function(){
 				control.innerText = timeLeft + 's'
 				timeLeft -= 1
 			}, 1000)
 			document.addEventListener('keydown', tap)
 			document.addEventListener('keyup', leave)
-			setTimeout(function(){
-				document.removeEventListener('keydown', tap)
-				metric.innerText = taps / 5 + ' tps'
-				taps = 0
-				clearInterval(lefting)
-				control.classList.add('idle')
-				control.innerText = 'retry'
-				mode = 0
-			}, 5000)
+			finish = setTimeout(dropTracking, 5000)
+		} else {
+			clearTimeout(finish)
+			dropTracking()
 		}
 	}
 </script>
