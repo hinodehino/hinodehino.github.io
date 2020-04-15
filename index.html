@@ -21,47 +21,133 @@
 			background: #1a1b1c;
 			color: white;
 		}
-		#content{
-			font-size: 36px;
-			font-weight: 500;
+		#overlay{
 			width: 100%;
 			height: 100%;
+			position: absolute;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			backdrop-filter: blur(20px);
+			z-index: 1;
+			transition: opacity .8s ease;
+		}
+		#loader{
+			user-select: none;
+			width: 100%;
+			height: 100%;
+			background: white;
+			color: white;
+			transition: all .8s ease;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 40px;
+			font-weight: bold;
+		}
+		#settings{
+			display: flex;
+			flex-direction: column;
+		}
+		#mode-select{
+			display: flex;
+			font-size: 18px;
+			font-weight: bold;
+			justify-content: space-between;
+		}
+		#content{
+			font-size: 36px;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			font-weight: 500;
+		}
+		.content-side{
+			height: 100%;
+			width: 50%;
+			display: flex;
+			align-items: center;
+			padding: 0 30px 0 30px;
+		}
+		.content-pattern{
+			display: flex;
+			flex-direction: column;
+		}
+		#counter{
+			text-align: center;
+		}
+		#cps-counter{
+			text-align: center;
+			font-size: 18px;
+		}
+		#main-control{
 			display: flex;
 			justify-content: center;
 			align-items: center;
 			flex-direction: column;
 		}
 		#stats{
-			transition: opacity .25s ease;
+			font-size: 20px;
+			transition: all .2s ease;
 		}
-		#sub-metric{
-			font-size: 18px;
+		#stats div{
 			text-align: center;
 		}
+		#sub-metric div{
+			transition: all .1s ease;
+		}
+		.label{
+			font-weight: bold;
+			font-size: 18px;
+		}
+		.inline{
+			display: flex;
+			align-items: center;
+		}
+		.inline div{
+			transition: all .2s ease;
+		}
+		.labeled-input{
+			display: flex;
+			text-align: left;
+			font-size: 18px;
+			font-weight: bold;
+			transition: all .2s ease;
+		}
+		.labeled-input input{
+			width: 40px;
+			margin-right: 5px;
+		}
+		.inline div{
+			text-align: left;
+		}
 		.wide-btn{
-			width: 100px;
+			width: 120px;
+			height: 25px;
+		}
+		.wide-inp{
+			width: 113px;
 			height: 25px;
 		}
 		#binds{
-			margin-top: 10px;
-			width: 110px;
+			width: 130px;
 			display: flex;
 		}
 		#binds div{
+			font-weight: bold;
 			width: 50%;
 			height: 50px;
 		}
 		#top-menu{
 			position: absolute;
-			padding: 15px;
+			padding: 30px;
 			display: flex;
 			align-items: center;
 		}
 		#credit{
 			text-decoration: none;
 			color: #0d7eff;
-			margin-left: 20px;
-			font-weight: 500;
+			font-weight: bold;
 		}
 		#theme-change{
 			user-select: none;
@@ -82,49 +168,112 @@
 		}
 	</style>
 </head>
-<body>
+<script type="text/javascript">
+	var hideLoader = function(){
+		overlay = document.getElementById("overlay")
+		loader = document.getElementById("loader")
+		loaderTxt = document.getElementById("loader-txt")
+		loader.style.background = 'transparent'
+		loader.style.color = 'black'
+		setTimeout(function(){
+			loader.style.opacity = 0
+			overlay.style.opacity = 0
+			setTimeout(function(){
+				loader.style.display = 'none'
+				overlay.style.zIndex ='-1'
+			}, 800)
+		}, 500)
+	}
+</script>
+<body onload="hideLoader()">
+	<div id="overlay">
+		<div id="loader">metris/dev</div>
+	</div>
 	<div id="top-menu">
-		<div id="theme-change" onclick="theme(this)">
-			<img id="theme-icon" src="https://img.icons8.com/material-rounded/100/000000/sun.png"/>
-		</div>
-		<a target="_blank" href="https://vk.com/metriss" id="credit">@metriss</a>
+		<a target="_blank" href="https://vk.com/metriss" id="credit">social</a>
 	</div>
 	<div id="content">
-		<div id="stats">
-			<div id="metric">0 taps</div>
-			<div id="sub-metric">
-				<div id="tps">0 tps</div>
-				<div id="tpm">0 tpm</div>
-				<div id="delay">0 ms</div>
+		<div class="content-side" style="justify-content: flex-end;">
+			<div class="side-content">
+				<div id="counter">idle</div>
+				<div id="cps-counter">0 cps</div>
+				<div id="main-control" style="margin-bottom: 20px;">
+					<div id="control-btn" style="margin-top: 15px; margin-bottom: 5px">
+						<div class="wide-btn btn btn-active btn-positive" id="start-button" onclick="track()">start</div>
+					</div>
+					<div class="wide-btn btn btn-active btn-negative" id="clear-button">clear</div>
+				</div>
+				<div id="settings" style="margin-bottom: 5px;">
+					<div id="mode-select" class="inline" style="margin-bottom: 5px">
+						<div style="margin-right: 5px;">timer</div>
+						<div class="switch-btn switch-on" onclick="switchMode(this)" style="align-self: right"></div>
+					</div>
+					<div id="timer-set" class="labeled-input inline">
+						<input id="time-control" type="number" min="1" max="3600" class="inp wide-inp" oninput="updateTime(this)" style="margin-bottom: 5px;" value="5">
+						<div>seconds</div>
+					</div>
+					<div id="clicks-set" class="blocked labeled-input inline">
+						<input id="clicks-control" type="number" min="1" max="3600" class="inp wide-inp" oninput="updateClicks(this)" style="margin-bottom: 5px;" value="20">
+						<div>clicks</div>
+					</div>
+					<div id="binds">
+						<div id='1' class="btn btn-idle" style="margin-right: 10px;" onclick="rebind(1)">
+							Z
+						</div>
+						<div id='2' class="btn btn-idle" onclick="rebind(2)">
+							X
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="wide-btn btn btn-active btn-positive" id="control" onclick="track()" style="margin-top: 15px; margin-bottom: 5px">start</div>
-		<div class="wide-btn btn btn-primary" id="drop-control" onclick="dropTracking()" style="margin-bottom: 5px">stop</div>
-		<div class="wide-btn btn btn-active btn-negative" id="clear-control">clear</div>
-		<div id="binds">
-			<div id='1' class="btn btn-idle" style="margin-right: 10px;" onclick="rebind(1)">
-				Z
-			</div>
-			<div id='2' class="btn btn-idle" onclick="rebind(2)">
-				X
+		<div id="stats" class="content-side">
+			<div class="content-pattern">
+				<div id="results" style="margin-bottom: 20px">
+					<div class="label primary" style="margin-bottom: 5px; width: 120px">RESULT</div>
+					<div class="inline">
+						<div class="label" style="width: 40px; margin-right: 20px">SCORE</div>
+						<div id="score">0 clicks</div>
+					</div>
+					<div class="inline">
+						<div class="label" style="width: 40px; margin-right: 20px">TIME</div>
+						<div id="time">0 sec</div>
+					</div>
+					<div class="inline">
+						<div class="label" style="width: 40px; margin-right: 20px">FREQ</div>
+						<div id="freq">0 cps</div>
+					</div>
+				</div>
+				<div id="global">
+					<div class="label primary" style="margin-bottom: 5px; width: 120px">TOTAL</div>
+					<div class="inline">
+						<div class="label" style="width: 40px; margin-right: 20px">MAX</div>
+						<div id="max">0 cps</div>
+					</div>
+					<div class="inline">
+						<div class="label" style="width: 40px; margin-right: 20px">MIN</div>
+						<div id="min">0 cps</div>
+					</div>
+					<div class="inline">
+						<div class="label" style="width: 40px; margin-right: 20px">AVG</div>
+						<div id="avg">0 cps</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </body>
 <script type="text/javascript">
-	var stats = document.getElementById("stats")
-	var metric = document.getElementById("metric")
-	var tpsmetric = document.getElementById("tps")
-	var tpmmetric = document.getElementById("tpm")
-	var delaymetric = document.getElementById("delay")
-	var control = document.getElementById("control")
-	var dropcontrol = document.getElementById("drop-control")
-	var delay = 0;
-	var delays = [];
-	var taps = 0;
 	var mode = 0;
-	var num = 0;
-	var countdown, finish;
+	var timerMode = 1;
+	var clicks = 0;
+	var sclicks = 0;
+	var timerTime = 5;
+	var streamClicks = 20;
+	var clicksLeft = streamClicks;
+	var streamStart = 0;
+	var freqs = [];
+	var bindNum = 0;
 	var btns = {
 		1: document.getElementById('1'),
 		2: document.getElementById('2')
@@ -133,79 +282,143 @@
 		1: 'KeyZ',
 		2: 'KeyX'
 	};
-	var darkMode = 0;
 
-	var clear = function(){
-		metric.innerText = '0 taps'
-		tpsmetric.innerText = '0 tps'
-		tpmmetric.innerText = '0 tpm'
-		delaymetric.innerText = '0 ms'
+	var counter = document.getElementById("counter")
+	var cpsCounter = document.getElementById("cps-counter")
+	var startButton = document.getElementById("start-button")
+	var stats = document.getElementById("stats")
+	var scoreMetric = document.getElementById("score")
+	var timeMetric = document.getElementById("time")
+	var freqMetric = document.getElementById("freq")
+	var maxMetric = document.getElementById("max")
+	var minMetric = document.getElementById("min")
+	var avgMetric = document.getElementById("avg")
+	var timerSet = document.getElementById("timer-set")
+	var clicksSet = document.getElementById("clicks-set")
+
+	var maxMinAvg = function(arr) {
+	    var max = arr[0]
+	    var min = arr[0]
+	    var sum = arr[0]
+	    for (var i = 1; i < arr.length; i++) {
+	        if (arr[i] > max) {
+	            max = arr[i]
+	        }
+	        if (arr[i] < min) {
+	            min = arr[i]
+	        }
+	        sum = sum + arr[i]
+	    }
+	    return [max, min, sum / arr.length]
 	}
-	document.getElementById("clear-control").addEventListener("click", function(){
-		if (!mode){
-			update()
-			setTimeout(clear, 250)
+
+	var switchMode = function(e){
+		if (timerMode){
+			timerSet.classList.add('blocked')
+			clicksSet.classList.remove('blocked')
+			e.classList.remove('switch-on')
+			timerMode = 0
+		} else {
+			timerSet.classList.remove('blocked')
+			clicksSet.classList.add('blocked')
+			e.classList.add('switch-on')
+			timerMode = 1
 		}
+	}
+
+	var clear = function(g){
+		scoreMetric.innerText = '0 clicks'
+		timeMetric.innerText = '0 sec'
+		freqMetric.innerText = '0 cps'
+		if (g){
+			freqs = []
+			maxMetric.innerText = '0 cps'
+			minMetric.innerText = '0 cps'
+			avgMetric.innerText = '0 cps'
+		}
+	}
+
+	var updateTime = function(e){
+		if (0 < e.value & e.value <= 3600){
+			timerTime = e.value
+		} else if (e.value <= 0){
+			timeTime = 1
+		} else if (e.value > 3600){
+			timerTime = 3600
+		}
+	}
+
+	var blink = function(e, t, f){
+		e.style.opacity = '0'
+		setTimeout(function(){
+			f()
+			e.style.opacity = '1'
+		}, t)
+	}
+
+	document.getElementById("clear-button").addEventListener('click', function(){
+		blink(document.getElementById('stats'), 200, function(){clear(1)})
 	})
 
-	var update = function(){
-		stats.style.opacity = '0'
-		setTimeout(function(){
-			stats.style.opacity = '1'
-		}, 250)
-	}
-
-	var theme = function(e){
-		if (!darkMode){
-			document.body.classList.add('dark')
-			e.classList.add('inverse')
-			darkMode = 1
-		} else {
-			document.body.classList.remove('dark')
-			e.classList.remove('inverse')
-			darkMode = 0
-		}
-	}
-
 	var change = function(e){
-		binds[num] = e.code
-		btns[num].classList.remove('btn-idle-act')
+		binds[bindNum] = e.code
+		btns[bindNum].classList.remove('btn-idle-act')
 		if (e.key.length <= 3){
-			btns[num].innerText = e.key.toUpperCase()
+			btns[bindNum].innerText = e.key.toUpperCase()
 		} else{
-			btns[num].innerText = e.key.substring(0, 3).toUpperCase()
+			btns[bindNum].innerText = e.key.substring(0, 3).toUpperCase()
 		}
 		document.removeEventListener('keydown', change)
-		num = 0
+		bindNum = 0
 	}
 
 	var rebind = function(n){
 		if (!mode){
-			if (!num){
+			if (!bindNum){
 				btns[n].classList.add('btn-idle-act')
-				num = n
+				bindNum = n
 				document.addEventListener('keydown', change)
 			}
 		}
 	}
 
-	var tap = function(e){
-		if (e.code == binds[1]){
-			taps += 1
-			metric.innerText = taps + ' taps'
-			btns[1].classList.add('btn-idle-act')
-			diff = new Date().getTime() - delay
-			delays.push(diff)
-			delaymetric.innerText = diff + ' ms'
-			delay = new Date().getTime()
-		} else if (e.code == binds[2]){
-			taps += 1
-			metric.innerText = taps + ' taps'
-			btns[2].classList.add('btn-idle-act')
-			diff = new Date().getTime() - delay
-			delays.push(diff)
-			delaymetric.innerText = diff + ' ms'
-			delay = new Date().getTime()
+	var click = function(e){
+		if (timerMode){
+			if (e.code == binds[1]){
+				clicks += 1
+				sclicks += 1
+				scoreMetric.innerText = clicks + ' clicks'
+				btns[1].classList.add('btn-idle-act')
+			} else if (e.code == binds[2]){
+				clicks += 1
+				sclicks += 1
+				scoreMetric.innerText = clicks + ' clicks'
+				btns[2].classList.add('btn-idle-act')
+			}
+		} else {
+			if (e.code == binds[1]){
+				clicks += 1
+				clicksLeft -= 1
+				scoreMetric.innerText = clicks + ' clicks'
+				counter.innerText = clicksLeft + ' left'
+				cps = (clicks / ((new Date().getTime() - streamStart) / 1000)).toFixed(1)
+				cpsCounter.innerText = cps + ' cps'
+				if (!clicksLeft){
+					dropTracking()
+				}
+				btns[1].classList.add('btn-idle-act')
+			} else if (e.code == binds[2]){
+				clicks += 1
+				clicksLeft -= 1
+				scoreMetric.innerText = clicks + ' clicks'
+				counter.innerText = clicksLeft + ' left'
+				cps = (clicks / ((new Date().getTime() - streamStart) / 1000)).toFixed(1)
+				cpsCounter.innerText = cps + ' cps'
+				if (!clicksLeft){
+					dropTracking()
+				}
+				btns[2].classList.add('btn-idle-act')
+			}
 		}
 	}
 
@@ -219,49 +432,82 @@
 
 	var dropTracking = function(){
 		if (mode){
-			dropcontrol.classList.remove('btn-active')
+			streamEnd = new Date().getTime()
 			btns[1].style.transition = 'all .2s ease'
 			btns[2].style.transition = 'all .2s ease'
-			clearInterval(countdown)
-			clearTimeout(finish)
-			document.removeEventListener('keydown', tap)
-			update()
-			setTimeout(function(){
-				tpsmetric.innerText = taps / 5 + ' tps'
-				tpmmetric.innerText = taps / 5 * 60 + ' tpm'
-				taps = 0
-				control.classList.add('btn-active')
-				control.innerText = 'start'
-				if (delays.length){
-					var sum = 0;
-					for(var i = 0; i < delays.length; i++){
-						sum += delays[i]
+			if (timerMode){
+				clearInterval(countdown)
+				clearTimeout(finish)
+			}
+			document.removeEventListener('keydown', click)
+			blink(stats, 200, function(){
+				if (timerMode){
+					if (clicks){
+						freqMetric.innerText = (clicks / passed).toFixed(1)
+						freqs.push(parseFloat((clicks / passed).toFixed(1)))
+					} else {
+						freqMetric.innerText = '0 tps'
 					}
-					delaymetric.innerText = (sum / delays.length).toFixed(0) + ' ms'
+				} else {
+					if (clicks){
+						diff = ((streamEnd - streamStart) / 1000)
+						freqMetric.innerText = (clicks / diff).toFixed(1) + ' cps'
+						freqs.push(parseFloat((clicks / diff).toFixed(1)))
+						timeMetric.innerText = diff.toFixed(1) + ' sec'
+					} else {
+						freqMetric.innerText = '0 tps'
+					}
 				}
+				globalStats = maxMinAvg(freqs)
+				maxMetric.innerText = globalStats[0].toFixed(1) + ' cps'
+				minMetric.innerText = globalStats[1].toFixed(1) + ' cps'
+				avgMetric.innerText = globalStats[2].toFixed(1) + ' cps'
+				clicks = 0
+				passed = 0
+				counter.innerText = 'idle'
+				cpsCounter.innerText = '0 cps'
+				startButton.classList.add('btn-active')
+				startButton.innerText = 'start'
 				mode = 0
-			}, 250)
+			})
 		}
 	}
 
 	var track = function(){
-		if (!mode & !num){
-			clear()
+		if (!mode & !bindNum){
+			clear(0)
 			mode = 1
-			control.innerText = '5s'
-			control.classList.remove('btn-active')
-			dropcontrol.classList.add('btn-active')
-			btns[1].style.transition = 'none'
-			btns[2].style.transition = 'none'
-			timeLeft = 4
-			delay = new Date().getTime()
-			countdown = setInterval(function(){
-				control.innerText = timeLeft + 's'
-				timeLeft -= 1
-			}, 1000)
-			document.addEventListener('keydown', tap)
-			document.addEventListener('keyup', leave)
-			finish = setTimeout(dropTracking, 5000)
+			if (timerMode){
+				counter.innerText = timerTime + ' sec'
+				startButton.classList.remove('btn-active')
+				startButton.innerText = 'stop'
+				btns[1].style.transition = 'none'
+				btns[2].style.transition = 'none'
+				timeLeft = timerTime - 1
+				countdown = setInterval(function(){
+					passed = timerTime - timeLeft
+					timeMetric.innerText = passed + ' sec'
+					cpsCounter.innerText = sclicks + ' cps'
+					sclicks = 0
+					counter.innerText = timeLeft + ' sec'
+					timeLeft -= 1
+				}, 1000)
+				document.addEventListener('keydown', click)
+				document.addEventListener('keyup', leave)
+				finish = setTimeout(dropTracking, timerTime * 1000)
+			} else {
+				counter.innerText = streamClicks + ' left'
+				startButton.classList.remove('btn-active')
+				startButton.innerText = 'stop'
+				btns[1].style.transition = 'none'
+				btns[2].style.transition = 'none'
+				clicksLeft = streamClicks
+				document.addEventListener('keydown', click)
+				streamStart = new Date().getTime()
+				document.addEventListener('keyup', leave)
+			}
+		} else {
+			dropTracking()
 		}
 	}
 </script>

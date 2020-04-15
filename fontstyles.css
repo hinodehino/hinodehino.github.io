@@ -11,3 +11,17 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'TT Commons';
+    src: url('TTCommons-Bold.woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TT Commons';
+    src: url('TTCommons-DemiBold.woff');
+    font-weight: 600;
+    font-style: normal;
+}
