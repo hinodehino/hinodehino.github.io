@@ -446,7 +446,7 @@
 						freqMetric.innerText = (clicks / passed).toFixed(1)
 						freqs.push(parseFloat((clicks / passed).toFixed(1)))
 					} else {
-						freqMetric.innerText = '0 tps'
+						freqMetric.innerText = '0 cps'
 					}
 				} else {
 					if (clicks){
@@ -455,18 +455,21 @@
 						freqs.push(parseFloat((clicks / diff).toFixed(1)))
 						timeMetric.innerText = diff.toFixed(1) + ' sec'
 					} else {
-						freqMetric.innerText = '0 tps'
+						freqMetric.innerText = '0 cps'
 					}
 				}
-				globalStats = maxMinAvg(freqs)
-				maxMetric.innerText = globalStats[0].toFixed(1) + ' cps'
-				minMetric.innerText = globalStats[1].toFixed(1) + ' cps'
-				avgMetric.innerText = globalStats[2].toFixed(1) + ' cps'
+				if (freqs.length){
+					globalStats = maxMinAvg(freqs)
+					maxMetric.innerText = globalStats[0].toFixed(1) + ' cps'
+					minMetric.innerText = globalStats[1].toFixed(1) + ' cps'
+					avgMetric.innerText = globalStats[2].toFixed(1) + ' cps'
+				}
 				clicks = 0
 				passed = 0
 				counter.innerText = 'idle'
 				cpsCounter.innerText = '0 cps'
 				startButton.classList.add('btn-active')
+				startButton.classList.remove('btn-idle')
 				startButton.innerText = 'start'
 				mode = 0
 			})
@@ -480,6 +483,7 @@
 			if (timerMode){
 				counter.innerText = timerTime + ' sec'
 				startButton.classList.remove('btn-active')
+				startButton.classList.add('btn-idle')
 				startButton.innerText = 'stop'
 				btns[1].style.transition = 'none'
 				btns[2].style.transition = 'none'
@@ -498,6 +502,7 @@
 			} else {
 				counter.innerText = streamClicks + ' left'
 				startButton.classList.remove('btn-active')
+				startButton.classList.add('btn-idle')
 				startButton.innerText = 'stop'
 				btns[1].style.transition = 'none'
 				btns[2].style.transition = 'none'
