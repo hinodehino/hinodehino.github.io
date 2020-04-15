@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>TPS test</title><link rel="stylesheet" type="text/css" href="fontstyles.css">
+	<link rel="stylesheet" type="text/css" href="metris.css">
 	<link rel="shortcut icon" href="favicon.png" type="image/png">
     <style type="text/css">
 		html{
@@ -30,70 +31,16 @@
 			align-items: center;
 			flex-direction: column;
 		}
+		#stats{
+			transition: opacity .25s ease;
+		}
 		#sub-metric{
 			font-size: 18px;
+			text-align: center;
 		}
-		.button{
-			cursor: pointer;
-			outline: none;
-			user-select: none;
-			margin-top: 1%;
-			border-radius: 5px;
-			font-size: 18px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			color: white;
-			transition: all .2s ease;
-			padding: 3px;
-			background: transparent;
-			border: 2px solid #0d7eff;
-			color: #0d7eff;
-		}
-		.button:hover{
-			background: #0d7eff;
-			color: black;
-			mix-blend-mode: screen;
-		}
-		.wide{
+		.wide-btn{
 			width: 100px;
-		}
-		.small{
-			width: 45px;
-		}
-		.idle{
-			border: 2px solid #4bd14d;
-			background: #4bd14d;
-			color: black;
-			mix-blend-mode: screen;
-		}
-		.idle:hover{
-			background: transparent;
-			color: #4bd14d;
-		}
-		.passive{
-			border: 2px solid #4c5359;
-			color: #4c5359;
-		}
-		.passive:hover{
-			background: transparent;
-			color: #4c5359;
-			border: 2px solid #4c5359;
-		}
-		.nonetransition{
-			transition: none;
-		}
-		.unhover:hover{
-			background: transparent;
-			color: #0d7eff;
-		}
-		.active{
-			background: #0d7eff;
-			color: black;
-		}
-		.active:hover{
-			background: #0d7eff;
-			color: black;
+			height: 25px;
 		}
 		#binds{
 			margin-top: 10px;
@@ -103,13 +50,6 @@
 		#binds div{
 			width: 50%;
 			height: 50px;
-		}
-		#info{
-			text-align: center;
-			margin-top: 20px;
-			font-size: 20px;
-			width: 50%;
-			color: #4c5359;
 		}
 		#top-menu{
 			position: absolute;
@@ -137,6 +77,9 @@
 		.inverse{
 			filter: invert(100%);
 		}
+		@keyframes{
+			from{opacity: 0};
+		}
 	</style>
 </head>
 <body>
@@ -147,27 +90,35 @@
 		<a target="_blank" href="https://vk.com/metriss" id="credit">@metriss</a>
 	</div>
 	<div id="content">
-		<div id="metric">0 tps</div>
-		<div id="sub-metric">0 ms</div>
-		<div class="wide button idle" id="control" onclick="track()">start</div>
+		<div id="stats">
+			<div id="metric">0 taps</div>
+			<div id="sub-metric">
+				<div id="tps">0 tps</div>
+				<div id="tpm">0 tpm</div>
+				<div id="delay">0 ms</div>
+			</div>
+		</div>
+		<div class="wide-btn btn btn-active btn-positive" id="control" onclick="track()" style="margin-top: 15px; margin-bottom: 5px">start</div>
+		<div class="wide-btn btn btn-primary" id="drop-control" onclick="dropTracking()" style="margin-bottom: 5px">stop</div>
+		<div class="wide-btn btn btn-active btn-negative" id="clear-control">clear</div>
 		<div id="binds">
-			<div id='1' class="button unhover nonetransition" style="margin-right: 10px;" onclick="rebind(1)">
+			<div id='1' class="btn btn-idle" style="margin-right: 10px;" onclick="rebind(1)">
 				Z
 			</div>
-			<div id='2' class="button unhover nonetransition" onclick="rebind(2)">
+			<div id='2' class="btn btn-idle" onclick="rebind(2)">
 				X
 			</div>
 		</div>
-		<div id="info">
-			Click on bind buttons and press your, to rebind it.
-		</div>
-		<div class="wide button passive" onclick="hide(this)">hide</div>
 	</div>
 </body>
 <script type="text/javascript">
+	var stats = document.getElementById("stats")
 	var metric = document.getElementById("metric")
-	var submetric = document.getElementById("sub-metric")
+	var tpsmetric = document.getElementById("tps")
+	var tpmmetric = document.getElementById("tpm")
+	var delaymetric = document.getElementById("delay")
 	var control = document.getElementById("control")
+	var dropcontrol = document.getElementById("drop-control")
 	var delay = 0;
 	var delays = [];
 	var taps = 0;
@@ -184,6 +135,24 @@
 	};
 	var darkMode = 0;
 
+	var clear = function(){
+		metric.innerText = '0 taps'
+		tpsmetric.innerText = '0 tps'
+		tpmmetric.innerText = '0 tpm'
+		delaymetric.innerText = '0 ms'
+	}
+	document.getElementById("clear-control").addEventListener("click", function(){
+		update()
+		setTimeout(clear, 250)
+	})
+
+	var update = function(){
+		stats.style.opacity = '0'
+		setTimeout(function(){
+			stats.style.opacity = '1'
+		}, 250)
+	}
+
 	var theme = function(e){
 		if (!darkMode){
 			document.body.classList.add('dark')
@@ -196,14 +165,9 @@
 		}
 	}
 
-	var hide = function(e){
-		e.style.display = 'none';
-		document.getElementById("info").style.display = 'none';
-	}
-
 	var change = function(e){
 		binds[num] = e.code
-		btns[num].classList.remove('active')
+		btns[num].classList.remove('btn-idle-act')
 		if (e.key.length <= 3){
 			btns[num].innerText = e.key.toUpperCase()
 		} else{
@@ -214,62 +178,79 @@
 	}
 
 	var rebind = function(n){
-		if (!num){
-			btns[n].classList.add('active')
-			num = n
-			document.addEventListener('keydown', change)
+		if (!mode){
+			if (!num){
+				btns[n].classList.add('btn-idle-act')
+				num = n
+				document.addEventListener('keydown', change)
+			}
 		}
 	}
 
 	var tap = function(e){
 		if (e.code == binds[1]){
 			taps += 1
-			metric.innerText = taps
-			btns[1].classList.add('active')
+			metric.innerText = taps + ' taps'
+			btns[1].classList.add('btn-idle-act')
 			diff = new Date().getTime() - delay
 			delays.push(diff)
-			submetric.innerText = diff + ' ms'
+			delaymetric.innerText = diff + ' ms'
 			delay = new Date().getTime()
 		} else if (e.code == binds[2]){
 			taps += 1
-			metric.innerText = taps
-			btns[2].classList.add('active')
+			metric.innerText = taps + ' taps'
+			btns[2].classList.add('btn-idle-act')
 			diff = new Date().getTime() - delay
 			delays.push(diff)
-			submetric.innerText = diff + ' ms'
+			delaymetric.innerText = diff + ' ms'
 			delay = new Date().getTime()
 		}
 	}
 
 	var leave = function(e){
 		if (e.code == binds[1]){
-			btns[1].classList.remove('active')
+			btns[1].classList.remove('btn-idle-act')
 		} else if (e.code == binds[2]){
-			btns[2].classList.remove('active')
+			btns[2].classList.remove('btn-idle-act')
 		}
 	}
 
 	var dropTracking = function(){
-		clearInterval(countdown)
-		document.removeEventListener('keydown', tap)
-		metric.innerText = taps / 5 + ' tps'
-		taps = 0
-		control.classList.add('idle')
-		control.innerText = 'retry'
-		var sum = 0;
-		for(var i = 0; i < delays.length; i++){
-			sum += delays[i]
+		if (mode){
+			dropcontrol.classList.remove('btn-active')
+			btns[1].style.transition = 'all .2s ease'
+			btns[2].style.transition = 'all .2s ease'
+			clearInterval(countdown)
+			clearTimeout(finish)
+			document.removeEventListener('keydown', tap)
+			update()
+			setTimeout(function(){
+				tpsmetric.innerText = taps / 5 + ' tps'
+				tpmmetric.innerText = taps / 5 * 60 + ' tpm'
+				taps = 0
+				control.classList.add('btn-active')
+				control.innerText = 'track'
+				if (delays.length){
+					var sum = 0;
+					for(var i = 0; i < delays.length; i++){
+						sum += delays[i]
+					}
+					delaymetric.innerText = (sum / delays.length).toFixed(0) + ' ms'
+				}
+				mode = 0
+			}, 250)
 		}
-		submetric.innerText = (sum / delays.length).toFixed(0) + ' ms'
-		mode = 0
 	}
 
 	var track = function(){
 		if (!mode){
+			clear()
 			mode = 1
 			control.innerText = '5s'
-			control.classList.remove('idle')
-			metric.innerText = '0'
+			control.classList.remove('btn-active')
+			dropcontrol.classList.add('btn-active')
+			btns[1].style.transition = 'none'
+			btns[2].style.transition = 'none'
 			timeLeft = 4
 			delay = new Date().getTime()
 			countdown = setInterval(function(){
@@ -279,9 +260,6 @@
 			document.addEventListener('keydown', tap)
 			document.addEventListener('keyup', leave)
 			finish = setTimeout(dropTracking, 5000)
-		} else {
-			clearTimeout(finish)
-			dropTracking()
 		}
 	}
 </script>
