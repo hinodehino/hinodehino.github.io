@@ -75,6 +75,7 @@
 		}
 		#counter{
 			text-align: center;
+			transition: all .2s ease;
 		}
 		#cps-counter{
 			text-align: center;
@@ -440,6 +441,7 @@
 				clearTimeout(finish)
 			}
 			document.removeEventListener('keydown', click)
+			counter.style.opacity = '0'
 			blink(stats, 200, function(){
 				if (timerMode){
 					if (clicks){
@@ -467,6 +469,7 @@
 				clicks = 0
 				passed = 0
 				counter.innerText = 'idle'
+				counter.style.opacity = '1'
 				cpsCounter.innerText = '0 cps'
 				startButton.classList.add('btn-active')
 				startButton.classList.remove('btn-idle')
