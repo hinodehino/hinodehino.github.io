@@ -272,6 +272,7 @@
 	var timerTime = 5;
 	var streamClicks = 20;
 	var clicksLeft = streamClicks;
+	var passed = 0;
 	var streamStart = 0;
 	var freqs = [];
 	var bindNum = 0;
@@ -445,8 +446,13 @@
 			blink(stats, 200, function(){
 				if (timerMode){
 					if (clicks){
-						freqMetric.innerText = (clicks / passed).toFixed(1)
-						freqs.push(parseFloat((clicks / passed).toFixed(1)))
+						if (passed){
+							freqMetric.innerText = (clicks / passed).toFixed(1)
+							freqs.push(parseFloat((clicks / passed).toFixed(1)))
+						} else {
+							freqMetric.innerText = clicks + ' cps'
+							freqs.push(parseFloat(clicks))
+						}
 					} else {
 						freqMetric.innerText = '0 cps'
 					}
@@ -484,6 +490,8 @@
 			clear(0)
 			mode = 1
 			if (timerMode){
+				document.addEventListener('keydown', click)
+				document.addEventListener('keyup', leave)
 				counter.innerText = timerTime + ' sec'
 				startButton.classList.remove('btn-active')
 				startButton.classList.add('btn-idle')
@@ -499,10 +507,11 @@
 					counter.innerText = timeLeft + ' sec'
 					timeLeft -= 1
 				}, 1000)
-				document.addEventListener('keydown', click)
-				document.addEventListener('keyup', leave)
 				finish = setTimeout(dropTracking, timerTime * 1000)
 			} else {
+				document.addEventListener('keydown', click)
+				streamStart = new Date().getTime()
+				document.addEventListener('keyup', leave)
 				counter.innerText = streamClicks + ' left'
 				startButton.classList.remove('btn-active')
 				startButton.classList.add('btn-idle')
@@ -510,9 +519,6 @@
 				btns[1].style.transition = 'none'
 				btns[2].style.transition = 'none'
 				clicksLeft = streamClicks
-				document.addEventListener('keydown', click)
-				streamStart = new Date().getTime()
-				document.addEventListener('keyup', leave)
 			}
 		} else {
 			dropTracking()
