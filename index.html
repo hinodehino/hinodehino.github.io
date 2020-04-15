@@ -142,8 +142,10 @@
 		delaymetric.innerText = '0 ms'
 	}
 	document.getElementById("clear-control").addEventListener("click", function(){
-		update()
-		setTimeout(clear, 250)
+		if (!mode){
+			update()
+			setTimeout(clear, 250)
+		}
 	})
 
 	var update = function(){
@@ -229,7 +231,7 @@
 				tpmmetric.innerText = taps / 5 * 60 + ' tpm'
 				taps = 0
 				control.classList.add('btn-active')
-				control.innerText = 'track'
+				control.innerText = 'start'
 				if (delays.length){
 					var sum = 0;
 					for(var i = 0; i < delays.length; i++){
@@ -243,7 +245,7 @@
 	}
 
 	var track = function(){
-		if (!mode){
+		if (!mode & !num){
 			clear()
 			mode = 1
 			control.innerText = '5s'
