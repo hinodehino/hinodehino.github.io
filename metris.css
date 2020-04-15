@@ -1,0 +1,94 @@
+.dark{
+	background: #1a1b1c;
+	color: white;
+}
+.no-transition{
+	transition: border 0s, color 0s, background 0s;
+}
+.btn{
+	outline: none;
+	user-select: none;
+	border-radius: 5px;
+	font-size: 18px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	transition: all .2s ease;
+	padding: 3px;
+	font-weight: 500;
+	background: transparent;
+	color: #a9b8c9;
+	border: 2px solid #a9b8c9;
+	transition: all .2s ease;
+	font-family: 'TT Commons'
+}
+.btn-idle{
+	cursor: pointer;
+	color: #0d7eff;
+	border-color: #0d7eff; 
+}
+.btn-idle.btn-idle-act{
+	background: #0d7eff;
+	color: black;
+}
+.btn-active{
+	cursor: pointer;
+	color: black;
+	background: #a9b8c9;
+}
+.btn-active:hover{
+	background: transparent;
+	color: #a9b8c9;
+}
+.btn-active.btn-positive{
+	background: #4bd14d;
+	border-color: #4bd14d;
+}
+.btn-active.btn-positive:hover{
+	background: transparent;
+	color: #4bd14d;
+}
+.btn-active.btn-primary{
+	background: #0d7eff;
+	border-color: #0d7eff;
+}
+.btn-active.btn-primary:hover{
+	background: transparent;
+	color: #0d7eff;
+}
+.btn-active.btn-negative{
+	background: #db372e;
+	border-color: #db372e;
+}
+.btn-active.btn-negative:hover{
+	background: transparent;
+	color: #db372e;
+}
+.btn-active.btn-warning{
+	background: #edb526;
+	border-color: #edb526;
+}
+.btn-active.btn-warning:hover{
+	background: transparent;
+	color: #edb526;
+}
+.inp{
+	outline: none;
+	border-radius: 5px;
+	border: 2px solid #a9b8c9;
+	padding: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
+	line-height: 2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: black;
+	font-family: 'TT Commons';
+	font-size: 18px;
+	font-weight: 500;
+}
+.inp::placeholder{
+	color: #a9b8c9;
+}
