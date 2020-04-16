@@ -350,6 +350,16 @@
 		}
 	}
 
+	var updateClicks = function(e){
+		if (0 < e.value & e.value <= 9999){
+			streamClicks = e.value
+		} else if (e.value <= 0){
+			streamClicks = 1
+		} else if (e.value > 9999){
+			streamClicks = 9999
+		}
+	}
+
 	var blink = function(e, t, f){
 		e.style.opacity = '0'
 		setTimeout(function(){
@@ -447,7 +457,7 @@
 				if (timerMode){
 					if (clicks){
 						if (passed){
-							freqMetric.innerText = (clicks / passed).toFixed(1)
+							freqMetric.innerText = (clicks / passed).toFixed(1) + ' cps'
 							freqs.push(parseFloat((clicks / passed).toFixed(1)))
 						} else {
 							freqMetric.innerText = clicks + ' cps'
