@@ -128,7 +128,7 @@
 		}
 		.wide-inp{
 			width: 113px;
-			height: 25px;
+			height: 30px;
 		}
 		#binds{
 			width: 130px;
@@ -200,9 +200,9 @@
 				<div id="cps-counter">0 cps</div>
 				<div id="main-control" style="margin-bottom: 20px;">
 					<div id="control-btn" style="margin-top: 15px; margin-bottom: 5px">
-						<div class="wide-btn btn btn-active btn-positive" id="start-button" onclick="track()">start</div>
+						<div class="wide-btn btn btn-mini btn-active btn-positive" id="start-button" onclick="track()">start</div>
 					</div>
-					<div class="wide-btn btn btn-active btn-negative" id="clear-button">clear</div>
+					<div class="wide-btn btn btn-mini btn-active btn-negative" id="clear-button">clear</div>
 				</div>
 				<div id="settings" style="margin-bottom: 5px;">
 					<div id="mode-select" class="inline" style="margin-bottom: 5px">
@@ -218,10 +218,10 @@
 						<div>clicks</div>
 					</div>
 					<div id="binds">
-						<div id='1' class="btn btn-idle" style="margin-right: 10px;" onclick="rebind(1)">
+						<div id='1' class="btn btn-mini btn-idle" style="margin-right: 10px;" onclick="rebind(1)" tooltip="click to rebind">
 							Z
 						</div>
-						<div id='2' class="btn btn-idle" onclick="rebind(2)">
+						<div id='2' class="btn btn-mini btn-idle" onclick="rebind(2)" tooltip="click to rebind">
 							X
 						</div>
 					</div>
@@ -231,7 +231,7 @@
 		<div id="stats" class="content-side">
 			<div class="content-pattern">
 				<div id="results" style="margin-bottom: 20px">
-					<div class="label primary" style="margin-bottom: 5px; width: 120px">RESULT</div>
+					<div class="label clr-primary" style="margin-bottom: 5px; width: 120px">RESULT</div>
 					<div class="inline">
 						<div class="label" style="width: 40px; margin-right: 20px">SCORE</div>
 						<div id="score">0 clicks</div>
@@ -246,7 +246,7 @@
 					</div>
 				</div>
 				<div id="global">
-					<div class="label primary" style="margin-bottom: 5px; width: 120px">TOTAL</div>
+					<div class="label clr-primary" style="margin-bottom: 5px; width: 120px">TOTAL</div>
 					<div class="inline">
 						<div class="label" style="width: 40px; margin-right: 20px">MAX</div>
 						<div id="max">0 cps</div>
@@ -388,6 +388,7 @@
 		if (!mode){
 			if (!bindNum){
 				btns[n].classList.add('btn-idle-act')
+				btns[n].innerText = '. . .'
 				bindNum = n
 				document.addEventListener('keydown', change)
 			}
