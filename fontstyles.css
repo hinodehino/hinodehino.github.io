@@ -1,3 +1,4 @@
+/* Medium */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-Medium.woff');
@@ -5,6 +6,7 @@
     font-style: normal;
 }
 
+/* Regular */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-Regular.woff');
@@ -12,6 +14,7 @@
     font-style: normal;
 }
 
+/* Bold */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-Bold.woff');
@@ -19,6 +22,7 @@
     font-style: normal;
 }
 
+/* Demi Bold */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-DemiBold.woff');
