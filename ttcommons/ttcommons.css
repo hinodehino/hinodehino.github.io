@@ -1,3 +1,4 @@
+/* Light Italic */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-LightItalic.eot');
@@ -10,6 +11,7 @@
     font-style: italic;
 }
 
+/* Black */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-Black.eot');
@@ -22,6 +24,7 @@
     font-style: normal;
 }
 
+/* Bold */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-Bold.eot');
@@ -34,6 +37,7 @@
     font-style: normal;
 }
 
+/* Demi Bold Italic */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-DemiBoldItalic.eot');
@@ -46,6 +50,7 @@
     font-style: italic;
 }
 
+/* Bold Italic */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-BoldItalic.eot');
@@ -58,6 +63,7 @@
     font-style: italic;
 }
 
+/* Regular */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-Regular.eot');
@@ -70,6 +76,7 @@
     font-style: normal;
 }
 
+/* Extra Bold */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-ExtraBold.eot');
@@ -82,6 +89,7 @@
     font-style: normal;
 }
 
+/* Italic */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-Italic.eot');
@@ -94,6 +102,7 @@
     font-style: italic;
 }
 
+/* Extra Light */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-ExtraLight.eot');
@@ -106,6 +115,7 @@
     font-style: normal;
 }
 
+/* Medium Italic */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-MediumItalic.eot');
@@ -118,6 +128,7 @@
     font-style: italic;
 }
 
+/* Thin */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-Thin.eot');
@@ -130,6 +141,7 @@
     font-style: normal;
 }
 
+/* Extra Light Italic */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-ExtraLightItalic.eot');
@@ -142,6 +154,7 @@
     font-style: italic;
 }
 
+/* Extra Bold Italic */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-ExtraBoldItalic.eot');
@@ -154,6 +167,7 @@
     font-style: italic;
 }
 
+/* Medium */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-Medium.eot');
@@ -166,6 +180,7 @@
     font-style: normal;
 }
 
+/* Black Italic */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-BlackItalic.eot');
@@ -178,6 +193,7 @@
     font-style: italic;
 }
 
+/* Light */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-Light.eot');
@@ -190,6 +206,7 @@
     font-style: normal;
 }
 
+/* Demi Bold */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-DemiBold.eot');
@@ -202,6 +219,7 @@
     font-style: normal;
 }
 
+/* Thin Italic */
 @font-face {
     font-family: 'TT Commons';
     src: url('TTCommons-ThinItalic.eot');
