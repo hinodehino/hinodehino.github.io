@@ -1,172 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<title>tps test!</title>
 	<meta charset="UTF-8">
-	<title>TPS test</title><link rel="stylesheet" type="text/css" href="fontstyles.css">
+
+    <link rel="stylesheet" type="text/css" href="fontstyles.css">
 	<link rel="stylesheet" type="text/css" href="metris.css">
 	<link rel="shortcut icon" href="favicon.png" type="image/png">
-    <style type="text/css">
-		html{
-    		overflow: hidden;
-    	}
-    	body{
-			width: 100vw;
-			height: 100vh;
-			margin: 0;
-			padding: 0;
-			font-family: 'TT Commons';
-			color: #222;
-		}
-		.dark{
-			background: #1a1b1c;
-			color: white;
-		}
-		#overlay{
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			backdrop-filter: blur(20px);
-			z-index: 1;
-			transition: opacity .8s ease;
-		}
-		#loader{
-			user-select: none;
-			width: 100%;
-			height: 100%;
-			background: white;
-			color: white;
-			transition: all .8s ease;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			font-size: 40px;
-			font-weight: bold;
-		}
-		#settings{
-			display: flex;
-			flex-direction: column;
-		}
-		#mode-select{
-			display: flex;
-			font-size: 18px;
-			font-weight: bold;
-			justify-content: space-between;
-		}
-		#content{
-			font-size: 36px;
-			width: 100%;
-			height: 100%;
-			display: flex;
-			font-weight: 500;
-		}
-		.content-side{
-			height: 100%;
-			width: 50%;
-			display: flex;
-			align-items: center;
-			padding: 0 30px 0 30px;
-		}
-		.content-pattern{
-			display: flex;
-			flex-direction: column;
-		}
-		#counter{
-			text-align: center;
-			transition: all .2s ease;
-		}
-		#cps-counter{
-			text-align: center;
-			font-size: 18px;
-		}
-		#main-control{
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			flex-direction: column;
-		}
-		#stats{
-			font-size: 20px;
-			transition: all .2s ease;
-		}
-		#stats div{
-			text-align: center;
-		}
-		#sub-metric div{
-			transition: all .1s ease;
-		}
-		.label{
-			font-weight: bold;
-			font-size: 18px;
-		}
-		.inline{
-			display: flex;
-			align-items: center;
-		}
-		.inline div{
-			transition: all .2s ease;
-		}
-		.labeled-input{
-			display: flex;
-			text-align: left;
-			font-size: 18px;
-			font-weight: bold;
-			transition: all .2s ease;
-		}
-		.labeled-input input{
-			width: 40px;
-			margin-right: 5px;
-		}
-		.inline div{
-			text-align: left;
-		}
-		.wide-btn{
-			width: 120px;
-			height: 25px;
-		}
-		.wide-inp{
-			width: 113px;
-			height: 30px;
-		}
-		#binds{
-			width: 130px;
-			display: flex;
-		}
-		#binds div{
-			font-weight: bold;
-			width: 50%;
-			height: 50px;
-		}
-		#top-menu{
-			position: absolute;
-			padding: 30px;
-			display: flex;
-			align-items: center;
-		}
-		#credit{
-			text-decoration: none;
-			color: #0d7eff;
-			font-weight: bold;
-		}
-		#theme-change{
-			user-select: none;
-			cursor: pointer;
-			transition: all .2s ease;
-		}
-		#theme-change:active{
-			transform: scale(0.8);
-		}
-		#theme-icon{
-			width: 30px;
-		}
-		.inverse{
-			filter: invert(100%);
-		}
-		@keyframes{
-			from{opacity: 0};
-		}
+	
+	<style type="text/css">
+	html {
+    	overflow: hidden;
+    }
+    	body {
+		width: 100vw;
+		height: 100vh;
+		margin: 0;
+		padding: 0;
+		font-family: 'TT Commons';
+		color: #222;
+	}
+	.dark {
+		background: #1a1b1c;
+		color: white;
+	}
+	#overlay {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		backdrop-filter: blur(20px);
+		z-index: 1;
+		transition: opacity .8s ease;
+	}
+	#loader {
+		user-select: none;
+		width: 100%;
+		height: 100%;
+		background: white;
+		color: white;
+		transition: all .8s ease;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 40px;
+		font-weight: bold;
+	}
+	#settings {
+		display: flex;
+		flex-direction: column;
+	}
+	#mode-select {
+		display: flex;
+		font-size: 18px;
+		font-weight: bold;
+		justify-content: space-between;
+	}
+	#content {
+		font-size: 36px;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		font-weight: 500;
+	}
+	.content-side {
+		height: 100%;
+		width: 50%;
+		display: flex;
+		align-items: center;
+		padding: 0 30px 0 30px;
+	}
+	.content-pattern {
+		display: flex;
+		flex-direction: column;
+	}
+	#counter {
+		text-align: center;
+		transition: all .2s ease;
+	}	
+	#cps-counter {
+		text-align: center;
+		font-size: 18px;
+	}
+	#main-control {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+	#stats {
+		font-size: 20px;
+		transition: all .2s ease;
+	}
+	#stats div {
+		text-align: center;
+	}
+	#sub-metric div {
+		transition: all .1s ease;
+	}
+	.label {
+		font-weight: bold;
+		font-size: 18px;
+	}
+	.inline {
+		display: flex;
+		align-items: center;
+	}
+	.inline div {
+		transition: all .2s ease;
+	}
+	.labeled-input {
+		display: flex;
+		text-align: left;
+		font-size: 18px;
+		font-weight: bold;
+		transition: all .2s ease;
+	}
+	.labeled-input input {
+		width: 40px;
+		margin-right: 5px;
+	}
+	.inline div {
+		text-align: left;
+	}
+	.wide-btn {
+		width: 120px;
+		height: 25px;
+	}
+	.wide-inp {
+		width: 113px;
+		height: 30px;
+	}
+	#binds {
+		width: 130px;
+		display: flex;
+	}
+	#binds div {
+		font-weight: bold;
+		width: 50%;
+		height: 50px;
+	}
+	#top-menu {
+		position: absolute;
+		padding: 30px;
+		display: flex;
+		align-items: center;
+	}
+	#credit {
+		text-decoration: none;
+		color: #0d7eff;
+		font-weight: bold;
+	}
+	#theme-change {
+		user-select: none;
+		cursor: pointer;
+		transition: all .2s ease;
+	}
+	#theme-change:active {
+		transform: scale(0.8);
+	}
+	#theme-icon {
+		width: 30px;
+	}
+	.inverse {
+		filter: invert(100%);
+	}
+	.global-inverse {
+		filter: invert(100%);
+		background: #000;
+	}
+	.global-inverse * {
+		filter: invert(100%);
+	}
+	@keyframes {
+		from{opacity: 0};
+	}
 	</style>
 </head>
 <script type="text/javascript">
